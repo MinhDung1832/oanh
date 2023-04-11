@@ -6,14 +6,13 @@
     <a href="/Menu/Language?lang=ENG">English</a>*@
 @*@Session["lang"]*@
 
-<div class="page-content fade-in-up">
+<div class="container">
     <div class="ibox mt-3">
-        <div class="ibox-head">
-            <div class="ibox-title col-md-3">Category Management</div>
-            <div class="btn-group btn-rounded">
+            <div class="text-center"><h1>Category Management</h1></div>
+        <div class="row mt-3">
+            <div class="col-md-10"></div>
+            <div class="btn-group btn-rounded col-md-2">
                 <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#CreateCate">Create</button>
-                <button class="btn btn-danger" onclick="js_acceptUpdate();">Update</button>
-                <button class="btn btn-default" data-toggle="modal" data-target="#myModal1">Delete</button>
             </div>
         </div>
         <div class="ibox-body" id="div-content-cate">
@@ -117,7 +116,7 @@
                     <p class="text-muted mb-4"> Bạn có muốn xóa bản ghi này không.</p>
                     <div class="hstack gap-2 justify-content-center">
                         <a href="javascript:void(0);" class="btn btn-link link-success fw-medium" data-bs-dismiss="modal"><i class="ri-close-line me-1 align-middle"></i> Đóng</a>
-                        <a href="javascript:void(0);" class="btn btn-success" onclick="js_acceptDeleteRow();">Xóa</a>
+                        <a href="javascript:void(0);" class="btn btn-success" data-bs-dismiss="modal" onclick="js_acceptDeleteRow();">Xóa</a>
                     </div>
                 </div>
             </div>

@@ -35,7 +35,7 @@ namespace WEB.Controllers
                         ID = item.ID,
                         Quantity = item.Quantity
                     };
-                BaseConnectionSql.Execute_Update_Insert("web", "sp_CartItem_UpdateQty", it);
+                    BaseConnectionSql.Execute_Update_Insert("web", "sp_CartItem_UpdateQty", it);
                 }
                 return Json(1);
             }
@@ -45,20 +45,27 @@ namespace WEB.Controllers
                 return Json(null);
             }
         }
-        public ActionResult DeleteCartItem(int ID)
+        public ActionResult DeleteCartItem(List<delete> lst)
         {
             try
             {
-                var a =    BaseConnectionSql.Execute_Update_Insert("web", "sp_CartItem_Delete", ID);
-                if (a)
+                bool ischeck = false;
+                foreach (var item in lst)
                 {
 
-                return Json(1);
+                    var a = BaseConnectionSql.Execute_Update_Insert("web", "sp_CartItem_Delete", item);
+                    if (a)
+                    {
+                        ischeck = true;
+                    }
+                }
+                if (ischeck = true)
+                {
+                    return Json(1);
                 }
                 else
                 {
-
-                return Json(2);
+                    return Json(2);
                 }
             }
             catch (Exception ex)

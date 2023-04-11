@@ -24,4 +24,11 @@ namespace WEB.Models
         public int ID { get; set; }
         public int Quantity { get; set; }
     }
+    public class delete{
+        public int ID { get; set; }
+    }
+    public class AddToCart{
+        public int ProductID { get; set; }
+        public int Quantity { get; set; }
+    }
 }

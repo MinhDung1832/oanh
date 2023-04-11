@@ -151,9 +151,6 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\CartController.cs" />
-    <Compile Include="Controllers\ColorController.cs" />
-    <Compile Include="Controllers\GroupProductController.cs" />
-    <Compile Include="Controllers\ListGroupController.cs" />
     <Compile Include="Controllers\MainController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
@@ -174,6 +171,7 @@
     <Compile Include="Models\LanguagesModel.cs" />
     <Compile Include="Models\MainModel.cs" />
     <Compile Include="Models\MenuModel.cs" />
+    <Compile Include="Models\Product.cs" />
     <Compile Include="Models\Product_Category.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
@@ -2387,9 +2385,6 @@
     <Content Include="Views\Menu\Tables\__tblIndex.cshtml" />
     <Content Include="Views\Menu\Create.cshtml" />
     <Content Include="Views\Menu\Update.cshtml" />
-    <Content Include="Views\ListGroup\Index.cshtml" />
-    <Content Include="Views\ListGroup\Tables\__tblIndex.cshtml" />
-    <Content Include="Views\ListGroup\Create.cshtml" />
     <Content Include="Scripts\Scripts\ckeditor\CHANGES.md" />
     <Content Include="Scripts\Scripts\ckeditor\LICENSE.md" />
     <Content Include="Scripts\Scripts\ckeditor\plugins\imagebrowser\README.rst" />
@@ -2401,14 +2396,6 @@
     <Content Include="Views\Category\Create.cshtml" />
     <Content Include="Views\Category\Index.cshtml" />
     <Content Include="Views\Category\Update.cshtml" />
-    <Content Include="Views\GroupProduct\Create.cshtml" />
-    <Content Include="Views\GroupProduct\Index.cshtml" />
-    <Content Include="Views\GroupProduct\Tables\__tblIndex.cshtml" />
-    <Content Include="Views\GroupProduct\Update.cshtml" />
-    <Content Include="Views\Color\Create.cshtml" />
-    <Content Include="Views\Color\Index.cshtml" />
-    <Content Include="Views\Color\Tables\__tblIndex.cshtml" />
-    <Content Include="Views\Color\Update.cshtml" />
     <Content Include="Views\Size\Index.cshtml" />
     <Content Include="Views\Size\Tables\__tblIndex.cshtml" />
     <Content Include="Views\Size\Create.cshtml" />

@@ -70,7 +70,7 @@
                                             @*<input type="hidden" class="product-quantity" id="totalrow_@i" value="@item["ToTal"]">*@
                                         </td>
                                         <td class="text-center align-middle" style="  overflow: hidden;white-space: nowrap">
-                                            <button class="btn btn-outline-danger border border-danger" id="deleteCartItem" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="getID('@item["ID"]')"><i class="ri-delete-bin-fill" style="font-size:20px"></i></button>
+                                            <button class="btn btn-outline-danger border border-danger" id="deleteCartItem" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick=" check(@i);"><i class="ri-delete-bin-fill" style="font-size:20px"></i></button>
 
                                         </td>
                                     </tr>

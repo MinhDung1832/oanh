@@ -184,22 +184,33 @@
             alert("Vui lòng điền số lượng combo!");
         }
     }
-    function getID(ID) {
-        this.id = ID;
-    }
+    
     function deleteItem() {
         debugger;
-        id = new getID();
+        var cboxes = document.getElementsByName('check[]');
+        var arrCheckbox = [];
+
+        var i = 0;
+        for (var i = 0; i < cboxes.length; i++) {
+            if (cboxes[i].checked) {
+                var po = {};
+                po.ID = cboxes[i].value;
+
+                console.log(po);
+                arrCheckbox.push(po);
+            }
+        }
         $.ajax({
             url: '/Cart/DeleteCartItem',
             type: 'POST',
-            data: JSON.stringify({ ID: id.id }),
+            data: JSON.stringify({ lst: arrCheckbox }),
             contentType: 'application/json, charset=utf-8',
             success: function (data) {
                 if (data == 1) {
                 alert("Xóa thành công!");
                 js_GetList();
-                } else {
+                }
+                if (data == 2) {
                     alert("Có lỗi xả ra!");
                     js_GetList();
                 }

@@ -16,10 +16,11 @@
                 <img src="~/images/air-jordan.png" alt="Image" class="img-fluid">
             </div>
             <div class="col-md-6">
-                <h2 class="text-black">Tank Top T-Shirt</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur, vitae, explicabo? Incidunt facere, natus soluta dolores iusto! Molestiae expedita veritatis nesciunt doloremque sint asperiores fuga voluptas, distinctio, aperiam, ratione dolore.</p>
-                <p class="mb-4">Ex numquam veritatis debitis minima quo error quam eos dolorum quidem perferendis. Quos repellat dignissimos minus, eveniet nam voluptatibus molestias omnis reiciendis perspiciatis illum hic magni iste, velit aperiam quis.</p>
-                <p><strong class="text-primary h4">50.00</strong></p>
+                <input type="text" id="idpro" value="@ViewBag.list_detail.ProductId" hidden/>
+                <h2 class="text-black">@ViewBag.list_detail.Name</h2>
+                <p>@ViewBag.list_detail.Description</p>
+                @*<p class="mb-4">Ex numquam veritatis debitis minima quo error quam eos dolorum quidem perferendis. Quos repellat dignissimos minus, eveniet nam voluptatibus molestias omnis reiciendis perspiciatis illum hic magni iste, velit aperiam quis.</p>*@
+                <p><strong class="text-primary h4">@ViewBag.list_detail.Price</strong></p>
                 <div class="mb-1 d-flex">
                     <div class="row" style="margin-left:0px">
 
@@ -54,13 +55,13 @@
                     <div>
                         <div class="input-step">
                             <button type="button" class="minus">–</button>
-                            <input type="number" class="product-quantity" value="2" min="0" max="100">
+                            <input type="number" id="qtypro" class="product-quantity" value="@ViewBag.list_detail.Quantity" min="0" max="100">
                             <button type="button" class="plus">+</button>
                         </div>
                     </div>
 
                 </div>
-                <p><a href="cart.html" class="buy-now btn btn-primary">Add To Cart</a></p>
+                <p><a href="" class="buy-now btn btn-primary" onclick="AddToCart();">Add To Cart</a></p>
 
             </div>
         </div>
@@ -150,4 +151,25 @@
         nav: true,
         items: 3,
     })
+
+    function AddToCart() {
+        var lst = {};
+        lst.ProductID = $('#idpro').val();
+        lst.Quantity = $('#qtypro').val();
+        $.ajax({
+            url: '/Shop/AddToCart',
+            type: 'POST',
+            data: JSON.stringify({ lst: lst }),
+            contentType: 'application/json, charset=utf-8',
+            success: function (data) {
+
+                if (data == 1) {
+                    alert('Sản phẩm đã thêm vào giỏ');
+                    window.location = '/Shop/Index'
+                }
+            }
+
+        });
+
+    }
 </script>
