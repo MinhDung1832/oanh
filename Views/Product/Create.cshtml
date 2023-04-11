@@ -1,0 +1,491 @@
+﻿@{
+    ViewBag.Title = "Create";
+    var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+    serializer.MaxJsonLength = Int32.MaxValue;
+    var jsonItems = serializer.Serialize(ViewBag.list_Color);
+    var jsonSizeItems = serializer.Serialize(ViewBag.list_Size);
+}
+
+<style>
+    #container-img {
+        margin: 0 0 7px 0px !important
+    }
+
+    .box-img {
+        width: 100%;
+        height: 100%;
+        border: 1px solid #ccc
+    }
+
+    #container-img li {
+        display: block;
+        position: relative;
+        margin: 3px 3px 3px 0;
+        padding: 5px;
+        float: left;
+        width: 90px;
+        height: 90px
+    }
+
+    .box-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover
+    }
+
+    .box-img:hover .btn-close {
+        display: inline-block
+    }
+
+    .box-img .btn-close {
+        position: absolute;
+        top: 0;
+        right: -2px;
+        line-height: 20px;
+        background: red;
+        color: #fff;
+        font-size: 14px;
+        width: 20px;
+        text-align: center;
+        border-radius: 16px;
+    }
+
+    .box-image img {
+        object-fit: cover;
+    }
+
+    img.attachment-thumbnail.size-thumbnail {
+        height: 100px;
+        object-fit: cover;
+    }
+</style>
+<input type="text" id="cap" name="name" value="DM" hidden disabled />
+<input type="text" id="getName" name="name" value="" disabled hidden />
+<div class="page-content fade-in-up">
+    <div class="ibox mt-3">
+        <div class="ibox-head">
+            <div class="ibox-title col-md-3">@NgonNgu.label("CreateNew")</div>
+        </div>
+        <div class="ibox-body" id="div-content">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <label class="col-md-3">Nhóm sản phẩm</label>
+                        <div class="col-md-6">
+                            <select class="form-control " name="module" id="module" style="width:250px;">
+                                <option id="cha" name="cha" value="1">-------------Chọn liên kết-------------</option>
+                                @Html.Raw(Comond.LoadSelectModule("DM", "-1"))
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Mã sản phẩm</label>
+                        <div class="col-md-5" style="padding-left: 15px">
+                            <input type="text" name="SPCode" id="SPCode" value="@ViewBag.getCode.Code" class="form-control" disabled />
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Tên sản phẩm</label>
+                        <div class="col-md-5" style=" padding-left: 15px">
+                            <input type="text" name="SPName" id="SPName" value="" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Ảnh đại diện sản phẩm</label>
+                        <div class="col-md-5">
+                            @Html.TextBox("AnhDaiDien", (string)ViewBag.AnhDaiDien, new { @class = "form-control" })
+                            <input class="sr-only" type="file" id="gallery3" onclick="BrowseServer('AnhDaiDien', 'News')">
+                        </div>
+                        <label class="btn btn-outline-primary btn-border ms-2" for="gallery3">
+                            Chọn ảnh
+                        </label>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-3">
+                            <label>Đăng nhiều ảnh</label>
+                        </div>
+                        <div class="col-md-5">
+                            <span>@Html.TextBox("txtMImage", (string)ViewBag.AnhDaiDien, new { @class = "form-control" })</span>
+                            <input class="sr-only" type="file" name="images[]" id="gallery" onclick="BrowseServerNew('txtMImage','News')">
+                        </div>
+                        <label class="btn btn-outline-primary btn-border ms-2" for="gallery">
+                            Chọn nhiều ảnh
+                        </label>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-9">
+                            <ul id="container-img" style="padding-left: 0px"></ul>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Nội dung chi tiết</label>
+                        <div class="col-md-9">
+                            @Html.TextArea("Details", (string)ViewBag.MoTa, new { @class = "ckeditor" })
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Bảo hành</label>
+                        <div class="col-md-9">
+                            @Html.TextArea("Insurance", (string)ViewBag.MoTa, new { @class = "ckeditor" })
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Ưu điểm nổi bật</label>
+                        <div class="col-md-9">
+                            @Html.TextArea("Advantages", (string)ViewBag.MoTa, new { @class = "ckeditor" })
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Thông tin giảm giá</label>
+                        <div class="col-md-9">
+                            @Html.TextArea("PriceInfo", (string)ViewBag.MoTa, new { @class = "ckeditor" })
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Giá bán cũ</label>
+                        <div class="col-md-5" style=" padding-left: 15px">
+                            <input type="number" name="OldPrice" id="OldPrice" value="" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Giá bán</label>
+                        <div class="col-md-5" style=" padding-left: 15px">
+                            <input type="number" name="Price" id="Price" value="" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Số lượng</label>
+                        <div class="col-md-5" style=" padding-left: 15px">
+                            <input type="number" name="Quantity" id="Quantity" value="" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Màu sắc</label>
+                        <div class="col-md-5" style=" padding-left: 15px">
+                            @Html.Raw(Comond.CheckBoxColor(""))
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">kích thước</label>
+                        <div class="col-md-5" style=" padding-left: 15px">
+                            @Html.Raw(Comond.CheckBoxSize(""))
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <label class="col-md-3">Tiêu đề</label>
+                        <div class="col-md-5" style="width: 30%; padding-left: 15px">
+                            <input name="Title" id="Title" value="" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Mô tả chi tiết</label>
+                        <div class="col-md-5" style="width: 30%; padding-left: 15px">
+                            <input name="Description" id="Description" value="" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Từ khóa</label>
+                        <div class="col-md-5" style="width: 30%; padding-left: 15px">
+                            <input name="Keyword" id="Keyword" value="" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Thứ tự</label>
+                        <div class="col-md-5" style="width: 30%; padding-left: 15px">
+                            <input type="number" name="Ord" id="Ord" value="" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Kích hoạt</label>
+                        <div class="col-md-3">
+                            <label class="ui-checkbox ui-checkbox-primary">
+                                <input type="checkbox" id="Active" name="Active" value="Active">
+                                <span class="input-span"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="" style="margin-left:10px;"></div>
+                <div class="">
+                    <button class="btn btn-outline-success btn-border" onclick="Save();">Save</button>
+                    <button class="btn btn-outline-primary btn-border" onclick="clear();">Clear</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section jsFooter{
+    @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>*@
+    <script src="~/Scripts/ckfinder/ckfinder.js" type="text/javascript"></script>
+    <script src="~/Scripts/ckeditor/ckeditor.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        CKEDITOR.replace('txttomtat', {
+            toolbar: [
+                { name: 'document', items: ['Source', '-', 'NewPage', 'Preview', '-', 'Templates'] },	// Defines toolbar group with name (used to create voice label) and items in 3 subgroups.
+                ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo'],			// Defines toolbar group without name.
+                '/',																					// Line break - next group will be placed in new line.
+                { name: 'basicstyles', items: ['Bold', 'Italic'] }
+            ]
+        });
+    </script>
+    <script type="text/javascript">
+        $('[id*=btnBrowseImage]').each(function () {
+            $(this).click(function () {
+                BrowseServerNew('#txtMImage', '');
+            });
+        });
+        $("#container-img").sortable({
+            stop: function (event, ui) {
+                $('#txtMImage').val(GetStringImg());
+            }
+        });
+        function delall() {
+            $("#container-img").html('');
+            $('#txtMImage').val(GetStringImg());
+        }
+
+        function SetFileFieldNew2(functionData, startupPath) {
+
+            var finder = new CKFinder();
+            finder.basePath = '~/Scripts/ckfinder/';
+            finder.startupPath = startupPath;
+            finder.selectActionFunction = SetFileFieldNew2;
+            finder.selectActionData = functionData;
+            finder.popup();
+        }
+        function SetFileFieldNew2(fileUrl, data, allFiles) {
+            var str = "";
+            var strimg = "";
+            var chuoi = "";
+            allFiles.forEach(function (item) {
+                strimg += "<li class='ui-state-default'><div class='box-img'><a href='javascript:void(0)' onclick=\"delimg($(this),'" + data["selectActionData"] + "');\" class='btn-close'>x</a> <img src='" + item.url + "' /> </div></li>";
+            })
+
+            $("#container-img2").html($("#container-img2").html() + strimg);
+            $("#container-img2").sortable({
+                stop: function (event, ui) {
+                    $('#txtMImage').val(GetStringImg());
+                }
+            });
+            $("#container-img2").disableSelection();
+            $('#' + data["selectActionData"]).val(GetStringImg());
+        }
+
+        function BrowseServerNew(functionData, startupPath) {
+
+            var finder = new CKFinder();
+            finder.basePath = '~/Scripts/ckfinder/';
+            finder.startupPath = startupPath;
+            finder.selectActionFunction = SetFileFieldNew;
+            finder.selectActionData = functionData;
+            finder.popup();
+        }
+        function SetFileFieldNew(fileUrl, data, allFiles) {
+            var str = "";
+            var strimg = "";
+            var chuoi = "";
+            allFiles.forEach(function (item) {
+                strimg += "<li class='ui-state-default'><div class='box-img'><a href='javascript:void(0)' onclick=\"delimg($(this),'" + data["selectActionData"] + "');\" class='btn-close'>x</a> <img src='" + item.url + "' /> </div></li>";
+            })
+
+            $("#container-img").html($("#container-img").html() + strimg);
+            $("#container-img").sortable({
+                stop: function (event, ui) {
+                    $('#txtMImage').val(GetStringImg());
+                }
+            });
+            $("#container-img").disableSelection();
+            $('#' + data["selectActionData"]).val(GetStringImg());
+        }
+        function LoadStringImg(strImg, inputimg) {
+            var arr = strImg.split(',');
+            var strimg = "";
+            var chuoi = "";
+            arr.forEach(function (item) {
+                strimg += "<li class='ui-state-default'><div class='box-img'><a href='javascript:void(0)' onclick=\"delimg($(this),'" + inputimg + "');\" class='btn-close'>x</a> <img src='" + item + "' /> </div></li>";
+            })
+            $("#container-img").html($("#container-img").html() + strimg);
+            $("#container-img").sortable({
+                stop: function (event, ui) {
+                    $('#txtMImage').val(GetStringImg());
+                }
+            });
+            $("#container-img").disableSelection();
+            $('#txtMImage').val(GetStringImg());
+        }
+        function GetStringImg() {
+            var str = "";
+            $(".box-img img").each(function () {
+                str += $(this).attr('src') + ',';
+            })
+            return str;
+        }
+        function delimg(img, inputimg) {
+            img.parent().parent().remove();
+            $('#' + inputimg).val(GetStringImg());
+        }
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            //js_GetCode();
+        });
+        function clear() {
+            $('#Name').val('');
+            $('#Target').val('');
+            $('#TenCM').val('');
+            $('#Rewrite').val('');
+            $('#AnhDaiDien').val('');
+            $('#Des').val('');
+            $('#Order').val('');
+            $('#Title').val('');
+            $('#Keyword').val('');
+            $('#MoTa').val('');
+        }
+        function js_checkbox() {
+            debugger;
+            var colorCheck = document.querySelectorAll('#color');
+            for (var i = 0; i < colorCheck.length; i++) {
+                if (colorCheck[i].checked == true) {
+                    $('#colorAll').prop("checked", false);
+                }
+            }
+            var sizeCheck = document.querySelectorAll('#size');
+            for (var j = 0; j < sizeCheck.length; j++) {
+                if (sizeCheck[j].checked == true) {
+                    $('#sizeAll').prop("checked", false);
+                }
+            }
+        }
+        function js_checkboxAll() {
+            debugger;
+            var colorCheckAll = document.getElementById('colorAll');
+            var colorCheck = document.querySelectorAll("#color");
+            for (var i = 0; i < colorCheck.length; i++) {
+                if (colorCheckAll.checked == true) {
+                    colorCheck[i].checked = false;
+                }
+            }
+            var sizeCheckAll = document.getElementById('sizeAll');
+            var sizeCheck = document.querySelectorAll("#size");
+            for (var j = 0; j < sizeCheck.length; j++) {
+                if (sizeCheckAll.checked == true) {
+                    sizeCheck[j].checked = false;
+                }
+            }
+        }
+        function Save() {
+            debugger;
+            window.scrollTo(0, 0);
+            var listItems = @Html.Raw(jsonItems);
+            var jsonSizeItems = @Html.Raw(jsonSizeItems);
+            var arrprocolor = [];
+            var arrprosize = [];
+
+            var lst = {};
+            lst.IdGroupPro = fomart_split($('#module option:selected').val(), 0);
+            lst.Code = $('#SPCode').val();
+            lst.Name = $('#SPName').val();
+            lst.Image = $('#AnhDaiDien').val();
+            lst.Images = $('#txtMImage').val();
+            lst.Detail = CKEDITOR.instances.Details.getData();
+            lst.Insurance = CKEDITOR.instances.Insurance.getData();
+            lst.Advantages = CKEDITOR.instances.Advantages.getData();
+            lst.PriceInfo = CKEDITOR.instances.PriceInfo.getData();
+            lst.OldPrice = $('#OldPrice').val();
+            lst.Price = $('#Price').val();
+            lst.Quantity = $('#Quantity').val();
+            if ($('input[name="colorAll"]:checked').val() == "colorAll") {
+                for (var i = 0; i < listItems.length; i++) {
+                    arrprocolor.push({
+                        "Color_Id":  listItems[i].Code,
+                        "Pro_ID": $('#SPCode').val()
+                    });
+                }
+                console.log(arrprocolor);
+            } else {
+                var colorcheckboxes = document.querySelectorAll("input[name='color']:checked");
+                for (let i = 0; i < colorcheckboxes.length; i++) {
+                    arrprocolor.push({
+                        "Color_Id": fomart_split(colorcheckboxes[i].value, 0),
+                        "Pro_ID": $('#SPCode').val()
+                    })
+                }
+                console.log(arrprocolor);
+            }
+            if ($('input[name="sizeAll"]:checked').val() == "sizeAll") {
+                for (var i = 0; i < jsonSizeItems.length; i++) {
+                    arrprosize.push({
+                        "Size_Id":  jsonSizeItems[i].Code,
+                        "Pro_ID": $('#SPCode').val()
+                    });
+                }
+                console.log(arrprosize);
+            } else {
+                var sizecheckboxes = document.querySelectorAll("input[name='size']:checked");
+                for (let i = 0; i < sizecheckboxes.length; i++) {
+                    arrprosize.push({
+                        "Size_Id": fomart_split(sizecheckboxes[i].value,0),
+                        "Pro_ID": $('#SPCode').val()
+                    })
+                }
+                console.log(arrprosize);
+            }
+            lst.Title = $('#Title').val();
+            lst.Description = $('#Description').val();
+            lst.Keyword = $('#Keyword').val();
+            lst.Ord = $('#Ord').val();
+            if ($('input[name="Active"]:checked').val() == "Active") {
+                lst.Active = '1';
+            } else {
+                lst.Active = '0';
+            }
+            console.log(lst);
+            var obj = {};
+            obj.Product = JSON.stringify(lst);
+            obj.Product_color = JSON.stringify(arrprocolor);
+            obj.Product_size = JSON.stringify(arrprosize);
+            $.ajax({
+                url: '/Product/CreateProduct',
+                type: 'POST',
+                data: JSON.stringify({ lstPro: lst, lstColor: arrprocolor, lstSize: arrprosize }),
+                contentType: 'application/json, charset=utf-8',
+                beforeSend: function () {
+                    js_Loading(true, 1);
+                },
+                success: function (data) {
+
+                    if (data == 1) {
+                        Swal.fire(
+                            'Good job!',
+                            'You clicked the button!',
+                            'success'
+                        )
+                        js_Loading(false, 1);
+                        window.location = '/Product/Index'
+                    }
+                },
+                error: function () {
+                    js_Loading(false, 1);
+                }
+
+            });
+
+        }
+        function fomart_split(input, number) {
+            try {
+                var value = input;
+                if (value != null && !value.length < 1) {
+                    return value.split(" - ")[number];
+                } else {
+                    return "";
+                }
+            } catch (e) {
+
+            }
+        }
+    </script>
+}

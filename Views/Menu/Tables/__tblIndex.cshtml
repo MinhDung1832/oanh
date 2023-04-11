@@ -1,0 +1,120 @@
+﻿@using System.Data;
+@using WEB.Models;
+@{
+    ViewBag.Title = "__tblIndex";
+    var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+    serializer.MaxJsonLength = Int32.MaxValue;
+    var list_level = (List<objCombox>)Session["list_level"];
+}
+<div id="example-table_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table table-striped table-bordered table-hover dataTable" id="example-table" cellspacing="0" width="100%" role="grid" aria-describedby="example-table_info" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th class="sorting_asc text-center" style="width: 50.5px;"><input type="checkbox" id="cball" onchange="checkall()" name="checkall[]" /></th>
+                        <th class="sorting text-center" style="width: 200.5px;">@NgonNgu.label("MenuName")</th>
+                        <th class="sorting text-center" style="width: 150.5px;">@NgonNgu.label("Level")</th>
+                        <th class="sorting text-center" style="width: 150.5px;">Liên kết</th>
+                        <th class="sorting text-center" style="width: 115.5px;">Hình ảnh</th>
+                        <th class="sorting text-center" style="width: 55.5px;">@NgonNgu.label("Target")</th>
+                        <th class="sorting text-center" style="width: 55.5px;">@NgonNgu.label("Order")</th>
+                        <th class="sorting text-center" style="width: 101.5px;">@NgonNgu.label("Status")</th>
+                        <th class="sorting text-center" style="width: 150.5px;">@NgonNgu.label("Func")</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @{
+                        if (Model != null)
+                        {
+                            var dt = Model as DataTable;
+                            if (dt.Rows.Count > 0)
+                            {
+                                var i = 0;
+                                foreach (DataRow item in dt.Rows)
+                                {
+                                    <tr id="row_@i">
+                                        <td class="text-center align-middle" style=" overflow: hidden;white-space: nowrap">
+                                            <input type="checkbox" id="_@i" onchange="" name="check[]" value="@item["ID"]" />
+                                        </td>
+                                        <td class="text-left align-middle" style="  overflow: hidden;white-space: nowrap" id="">
+                                            @Html.Raw(Comond.Hienthihinhcay(item["Name"].ToString(), item["Level"].ToString()))
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            @*@ViewBag.lst_sel*@
+                                            <select class="form-control " name="Parent" id="LopCha" style="width:230px;" onchange="check(@i); js_acceptUpdate();">
+                                                <option id="cha" name="cha" value="1">-------------Chọn lớp cha-------------</option>
+                                                @Html.Raw(Comond.LoadSelect(@item["Parent_ID"].ToString().Trim(), @item["capp"].ToString().Trim()))
+                                            </select>
+                                        </td>
+                                        <td class="text-left align-middle" style="  overflow: hidden;white-space: nowrap">
+                                            @item["Link"]
+                                        </td>
+                                        <td class="text-center align-middle" style="  overflow: hidden;white-space: nowrap">
+                                            <img alt="" src="@Url.Content(""+@item["Images"])" style="width:30%; height:auto; padding:0px;" />
+                                        </td>
+                                        <td class="text-center align-middle" style="  overflow: hidden;white-space: nowrap">
+                                            @item["Type"]
+                                        </td>
+                                        <td class="text-center align-middle" style=" overflow: hidden;white-space: nowrap">
+                                            @item["Orders"]
+                                        </td>
+                                        <td class="text-center align-middle" style=" overflow: hidden;white-space: nowrap">
+                                            @if (item["Status"].ToString() != "1")
+                                            {
+                                                <input class="checkbox" type="checkbox" id="TrangThai" onchange="check(@i);js_acceptUpdateStatus1();" name="TrangThai" value="@item["Status"]" />
+                                            }
+                                            else
+                                            {
+                                                <input class="checkbox" type="checkbox" id="TrangThai" onchange="check(@i);js_acceptUpdateStatus();" name="TrangThai" value="@item["Status"]" checked />
+                                            }
+                                        </td>
+                                        <td class="text-center align-middle" style="  overflow: hidden;white-space: nowrap">
+                                            <a class="btn btn-xs border border-success" href="/Menu/Create?Parent_ID=@item["ID"]"><i class="fa-solid fa-plus m-1"></i></a>
+                                            <a class="btn btn-xs border border-primary" href="/Menu/Update?Parent_ID=@item["ID"]"><i class="fa-solid fa-pen-to-square m-1"></i></a>
+                                            <a class="btn btn-xs border border-danger" id="iddel" data-toggle="modal" data-target="#myModal" onclick=" check(@i);"><i class="fa-solid fa-trash m-1"></i></a>
+                                        </td>
+                                    </tr>
+                                    i++;
+                                }
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Bạn muốn xóa bản ghi này không?</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            @*<div class="modal-body">
+                </div>*@
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="js_acceptDeleteRow();">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    function check(r) {
+        $('#_' + r).filter(':checkbox').prop('checked', true);
+    }
+    function checkall() {
+        var cboxes = document.getElementsByName('check[]');
+        for (var i = 0; i < cboxes.length; i++) {
+            if ($('#cball').is(":checked")) {
+                cboxes[i].checked = true;
+            } else { cboxes[i].checked = false; }
+        }
+    }
+</script>

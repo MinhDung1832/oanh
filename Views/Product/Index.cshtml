@@ -1,0 +1,258 @@
+﻿@using WEB.Models;
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="page-content fade-in-up">
+    <div class="ibox mt-3">
+        <div class="ibox-head">
+            <div class="ibox-title col-md-3">@NgonNgu.label("List")</div>
+            <div class="btn-group btn-rounded">
+                <button class="btn btn-success" onclick="window.location ='/Product/Create'">@NgonNgu.label("CreateNew")</button>
+                <button class="btn btn-danger" onclick="js_acceptUpdate();"> @NgonNgu.label("l_update")</button>
+                <button class="btn btn-default" data-toggle="modal" data-target="#myModal1"> @NgonNgu.label("ldelete")</button>
+            </div>
+        </div>
+        <div class="ibox-body" id="div-content-Product">
+            @Html.Partial("~/Views/Product/Tables/__tblIndex.cshtml")
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Bạn muốn xóa những bản ghi này không?</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="js_acceptDelete();">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section jsFooter{
+    <script type="text/javascript">
+        $(function () {
+            js_GetList();
+            imgrecall();
+        });
+        function js_ReloadTable() {
+            $('#example-table-Product')
+                .on('draw.dt', function () { imgrecall(); })
+                .DataTable({
+                    lengthMenu: [[10, 20, 50, 70, 100, -1], [10, 20, 50, 70, 100, 'All']],
+                    "pageLength": 10,
+                    columnDefs: [],
+                    "orderClasses": false,
+                    "deferRender": true,
+                    autoWidth: false,
+                    bAutoWidth: false,
+                    "searching": false,
+                    order: [],
+                    "language": {
+                        "emptyTable": "Không có dữ liệu !"
+                    }
+                });
+        }
+        function imgrecall() {
+            tb_init('a.thickbox, area.thickbox, input.thickbox');
+
+            $('img.content').hover(function () {
+                $(this).addClass('transition');
+            }, function () {
+                $(this).removeClass('transition');
+            });
+        }
+        function js_GetList() {
+            window.scrollTo(0, 0);
+            $.ajax({
+                url: '/Product/getList',
+                type: 'POST',
+                data: JSON.stringify({}),
+                contentType: 'application/json, charset=utf-8',
+                beforeSend: function () {
+                    js_Loading(true, 1);
+                },
+                success: function (data) {
+                    $('#div-content-Product').html(data);
+                    js_ReloadTable();
+                    js_Loading(false, 1);
+                },
+                error: function () {
+                    js_Loading(false, 1);
+                }
+            });
+        }
+        function js_acceptDelete() {
+
+            var cboxes = document.getElementsByName('check[]');
+            var arrCheckbox4 = [];
+
+            var i = 0;
+            for (var i = 0; i < cboxes.length; i++) {
+                if (cboxes[i].checked) {
+                    var po = {};
+                    //po.Code = cboxes[i].value;
+                    po.Pro_ID = cboxes[i].value;
+
+                    console.log(po);
+                    arrCheckbox4.push(po);
+                }
+            }
+
+            if (arrCheckbox4.length == 0) {
+                Swal.fire(
+                    'Warning!',
+                    'Vui lòng chọn 1 bản ghi!',
+                    'warning'
+                )
+                return;
+            }
+
+            if (arrCheckbox4.length > 0) {
+                $.ajax({
+                    url: '/Product/DeleteProduct',
+                    type: 'POST',
+                    data: JSON.stringify({ lst: arrCheckbox4, lstColor: arrCheckbox4, lstSize: arrCheckbox4 }),
+                    contentType: 'application/json, charset=utf-8',
+                    beforeSend: function () {
+                        js_Loading(true, 1);
+                    },
+                    success: function (data) {
+
+                        if (data == 1) {
+                            Swal.fire(
+                                'Deleted!',
+                                'Your file has been deleted.',
+                                'success'
+                            )
+                            js_GetList();
+                            js_Loading(false, 1);
+                        }
+
+                    },
+                    error: function () {
+                        js_Loading(false, 1);
+                    }
+
+                });
+            }
+        }
+        function js_acceptUpdateActive() {
+            debugger;
+
+            var cboxes = document.getElementsByName('check[]');
+            var arrCheckbox4 = [];
+            var i = 0;
+            for (var i = 0; i < cboxes.length; i++) {
+                if (cboxes[i].checked) {
+                    var po = {};
+                    if ($('input[name="Active"]:checked')) {
+                        po.Active = '0';
+                    }
+
+                    po.ID = cboxes[i].value;
+                    arrCheckbox4.push(po);
+                    console.log(arrCheckbox4);
+                }
+            }
+
+            if (arrCheckbox4.length == 0) {
+                Swal.fire(
+                    'Warning!',
+                    'Vui lòng chọn 1 bản ghi!',
+                    'warning'
+                )
+                return;
+            }
+
+            if (arrCheckbox4.length > 0) {
+                $.ajax({
+                    url: '/Product/UpdateActive',
+                    type: 'POST',
+                    data: JSON.stringify({ lst: arrCheckbox4 }),
+                    contentType: 'application/json, charset=utf-8',
+                    beforeSend: function () {
+                        js_Loading(true, 1);
+                    },
+                    success: function (data) {
+
+                        if (data == 1) {
+                            Swal.fire(
+                                'Update!',
+                                'Your file has been update.',
+                                'success'
+                            )
+                            js_GetList();
+                            js_Loading(false, 1);
+                        }
+
+                    },
+                    error: function () {
+                        js_Loading(false, 1);
+                    }
+
+                });
+            }
+        }
+        function js_acceptUpdateActive1() {
+            debugger;
+
+            var cboxes = document.getElementsByName('check[]');
+            var arrCheckbox4 = [];
+            var i = 0;
+            for (var i = 0; i < cboxes.length; i++) {
+                if (cboxes[i].checked) {
+                    var po = {};
+                    if ($('input[name="Active"]')) {
+                        po.Active = '1';
+                    }
+
+                    po.ID = cboxes[i].value;
+                    arrCheckbox4.push(po);
+                    console.log(arrCheckbox4);
+                }
+            }
+
+            if (arrCheckbox4.length == 0) {
+                Swal.fire(
+                    'Warning!',
+                    'Vui lòng chọn 1 bản ghi!',
+                    'warning'
+                )
+                return;
+            }
+
+            if (arrCheckbox4.length > 0) {
+                $.ajax({
+                    url: '/Product/UpdateActive',
+                    type: 'POST',
+                    data: JSON.stringify({ lst: arrCheckbox4 }),
+                    contentType: 'application/json, charset=utf-8',
+                    beforeSend: function () {
+                        js_Loading(true, 1);
+                    },
+                    success: function (data) {
+
+                        if (data == 1) {
+                            Swal.fire(
+                                'Update!',
+                                'Your file has been update.',
+                                'success'
+                            )
+                            js_GetList();
+                            js_Loading(false, 1);
+                        }
+
+                    },
+                    error: function () {
+                        js_Loading(false, 1);
+                    }
+
+                });
+            }
+        }
+    </script>
+}

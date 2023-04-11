@@ -1,0 +1,367 @@
+﻿@{
+    ViewBag.Title = "Create";
+}
+<style>
+    #container-img {
+        margin: 0 0 7px 0px !important
+    }
+
+    .box-img {
+        width: 100%;
+        height: 100%;
+        border: 1px solid #ccc
+    }
+
+    #container-img li {
+        display: block;
+        position: relative;
+        margin: 3px 3px 3px 0;
+        padding: 5px;
+        float: left;
+        width: 90px;
+        height: 90px
+    }
+
+    .box-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover
+    }
+
+    .box-img:hover .btn-close {
+        display: inline-block
+    }
+
+    .box-img .btn-close {
+        position: absolute;
+        top: 0;
+        right: -2px;
+        line-height: 20px;
+        background: red;
+        Size: #fff;
+        font-size: 14px;
+        width: 20px;
+        text-align: center;
+        border-radius: 16px;
+    }
+
+    .box-image img {
+        object-fit: cover;
+    }
+
+    img.attachment-thumbnail.size-thumbnail {
+        height: 100px;
+        object-fit: cover;
+    }
+
+    input[type="Size"] {
+        appearance: none;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        background: none;
+        border: 0;
+        cursor: pointer;
+        height: 15em;
+        padding: 0;
+        width: 15em;
+    }
+
+    *:focus {
+        border-radius: 0;
+        outline: none;
+    }
+
+    ::-webkit-Size-swatch-wrapper {
+        padding: 0;
+    }
+
+    ::-webkit-Size-swatch {
+        border: 0;
+        border-radius: 0;
+    }
+
+    ::-moz-Size-swatch,
+    ::-moz-focus-inner {
+        border: 0;
+    }
+
+    ::-moz-focus-inner {
+        padding: 0;
+    }
+</style>
+<input type="text" id="cap" name="name" value="MN" hidden disabled />
+<input type="text" id="getName" name="name" value="" disabled hidden />
+<div class="page-content fade-in-up">
+    <div class="ibox mt-3">
+        <div class="ibox-head">
+            <div class="ibox-title col-md-3">@NgonNgu.label("CreateNew")</div>
+        </div>
+        <div class="ibox-body" id="div-content">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row mt-2" hidden>
+                        <label class="col-md-3">Mã kích thước</label>
+                        <div class="col-md-5" style="width: 30%; padding-left: 15px">
+                            <input type="text" name="SizeCode" id="SizeCode" value="@ViewBag.getCode.Code" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Tên kích thước</label>
+                        <div class="col-md-5" style="width: 30%; padding-left: 15px">
+                            <input type="text" name="SizeName" id="SizeName" value="" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Thứ tự</label>
+                        <div class="col-md-5" style="width: 30%; padding-left: 15px">
+                            <input type="number" name="ord" id="ord" value="" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Size mặc định</label>
+                        <div class="col-md-3">
+                            <label class="ui-checkbox ui-checkbox-primary">
+                                <input type="checkbox" id="active" name="active" value="active">
+                                <span class="input-span"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="" style="margin-left:10px;"></div>
+                <div class="">
+                    <button class="btn btn-outline-success btn-border" onclick="Save();">Save</button>
+                    <button class="btn btn-outline-primary btn-border" onclick="clear();">Clear</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section jsFooter{
+    @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>*@
+    <script src="~/Scripts/ckfinder/ckfinder.js" type="text/javascript"></script>
+    <script src="~/Scripts/ckeditor/ckeditor.js" type="text/javascript"></script>
+    <script src="~/Content/assets/js/scripts/form-plugins.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        CKEDITOR.replace('txttomtat', {
+            toolbar: [
+                { name: 'document', items: ['Source', '-', 'NewPage', 'Preview', '-', 'Templates'] },	// Defines toolbar group with name (used to create voice label) and items in 3 subgroups.
+                ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo'],			// Defines toolbar group without name.
+                '/',																					// Line break - next group will be placed in new line.
+                { name: 'basicstyles', items: ['Bold', 'Italic'] }
+            ]
+        });
+    </script>
+    <script type="text/javascript">
+        $(function () {
+        });
+        function Save() {
+            debugger;
+            window.scrollTo(0, 0);
+            var lst = {};
+            lst.Code = $('#SizeCode').val().trim();
+            lst.Name = $('#SizeName').val().trim();
+            lst.Orders = $('#ord').val();
+            if ($('input[name="active"]:checked').val() == "active") {
+                lst.Active = '1';
+            } else {
+                lst.Active = '0';
+            }
+
+            console.log(lst);
+
+            $.ajax({
+                url: '/Size/CreateSize',
+                type: 'POST',
+                data: JSON.stringify({ lst: lst }),
+                contentType: 'application/json, charset=utf-8',
+                beforeSend: function () {
+                    js_Loading(true, 1);
+                },
+                success: function (data) {
+
+                    if (data == 1) {
+                        Swal.fire(
+                            'Good job!',
+                            'You clicked the button!',
+                            'success'
+                        )
+                        js_Loading(false, 1);
+                        window.location = '/Size/Index'
+                    }
+                },
+                error: function () {
+                    js_Loading(false, 1);
+                }
+
+            });
+
+        }
+        $('[id*=btnBrowseImage]').each(function () {
+            $(this).click(function () {
+                BrowseServerNew('#txtMImage', '');
+            });
+        });
+        //$("#container-img").sortable({
+        //    stop: function (event, ui) {
+        //        $('#txtMImage').val(GetStringImg());
+        //    }
+        //});
+        function delall() {
+            $("#container-img").html('');
+            $('#txtMImage').val(GetStringImg());
+        }
+
+        function SetFileFieldNew2(functionData, startupPath) {
+
+            var finder = new CKFinder();
+            finder.basePath = '~/Scripts/ckfinder/';
+            finder.startupPath = startupPath;
+            finder.selectActionFunction = SetFileFieldNew2;
+            finder.selectActionData = functionData;
+            finder.popup();
+        }
+        function SetFileFieldNew2(fileUrl, data, allFiles) {
+            var str = "";
+            var strimg = "";
+            var chuoi = "";
+            allFiles.forEach(function (item) {
+                strimg += "<li class='ui-state-default'><div class='box-img'><a href='javascript:void(0)' onclick=\"delimg($(this),'" + data["selectActionData"] + "');\" class='btn-close'>x</a> <img src='" + item.url + "' /> </div></li>";
+            })
+
+            $("#container-img2").html($("#container-img2").html() + strimg);
+            $("#container-img2").sortable({
+                stop: function (event, ui) {
+                    $('#txtMImage').val(GetStringImg());
+                }
+            });
+            $("#container-img2").disableSelection();
+            $('#' + data["selectActionData"]).val(GetStringImg());
+        }
+
+        function BrowseServerNew(functionData, startupPath) {
+
+            var finder = new CKFinder();
+            finder.basePath = '~/Scripts/ckfinder/';
+            finder.startupPath = startupPath;
+            finder.selectActionFunction = SetFileFieldNew;
+            finder.selectActionData = functionData;
+            finder.popup();
+        }
+        function SetFileFieldNew(fileUrl, data, allFiles) {
+            var str = "";
+            var strimg = "";
+            var chuoi = "";
+            allFiles.forEach(function (item) {
+                strimg += "<li class='ui-state-default'><div class='box-img'><a href='javascript:void(0)' onclick=\"delimg($(this),'" + data["selectActionData"] + "');\" class='btn-close'>x</a> <img src='" + item.url + "' /> </div></li>";
+            })
+
+            $("#container-img").html($("#container-img").html() + strimg);
+            $("#container-img").sortable({
+                stop: function (event, ui) {
+                    $('#txtMImage').val(GetStringImg());
+                }
+            });
+            $("#container-img").disableSelection();
+            $('#' + data["selectActionData"]).val(GetStringImg());
+        }
+        function LoadStringImg(strImg, inputimg) {
+            var arr = strImg.split(',');
+            var strimg = "";
+            var chuoi = "";
+            arr.forEach(function (item) {
+                strimg += "<li class='ui-state-default'><div class='box-img'><a href='javascript:void(0)' onclick=\"delimg($(this),'" + inputimg + "');\" class='btn-close'>x</a> <img src='" + item + "' /> </div></li>";
+            })
+            $("#container-img").html($("#container-img").html() + strimg);
+            $("#container-img").sortable({
+                stop: function (event, ui) {
+                    $('#txtMImage').val(GetStringImg());
+                }
+            });
+            $("#container-img").disableSelection();
+            $('#txtMImage').val(GetStringImg());
+        }
+        function GetStringImg() {
+            var str = "";
+            $(".box-img img").each(function () {
+                str += $(this).attr('src') + ',';
+            })
+            return str;
+        }
+        function delimg(img, inputimg) {
+            img.parent().parent().remove();
+            $('#' + inputimg).val(GetStringImg());
+        }
+        function loc_xoa_dau(str) {
+            str = str.toLowerCase();
+            // Gộp nhiều dấu space thành 1 space
+            str = str.replace(/\s+/g, '-');
+            // loại bỏ toàn bộ dấu space (nếu có) ở 2 đầu của chuỗi
+            str = str.trim();
+            // bắt đầu xóa dấu tiếng việt  trong chuỗi
+            str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
+            str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
+            str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
+            str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
+            str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
+            str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
+            str = str.replace(/đ/g, "d");
+            str = str.replace(/À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ/g, "A");
+            str = str.replace(/È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ/g, "E");
+            str = str.replace(/Ì|Í|Ị|Ỉ|Ĩ/g, "I");
+            str = str.replace(/Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ/g, "O");
+            str = str.replace(/Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ/g, "U");
+            str = str.replace(/Ỳ|Ý|Ỵ|Ỷ|Ỹ/g, "Y");
+            str = str.replace(/Đ/g, "D");
+            return str;
+        }
+        function getName() {
+            debugger;
+            var Name = $('#Name').val().trim();
+            $.ajax({
+                url: '/Menu/getName',
+                type: 'POST',
+                data: JSON.stringify({ Name: Name }),
+                contentType: 'application/json, charset=utf-8',
+                beforeSend: function () {
+                    js_Loading(true, 1);
+                },
+                success: function (data) {
+                    if (data.code == 1) {
+                        $('#Rewrite').val(data.link.Link + ".html");
+                    }
+                    if (data.code == 2) {
+                        $('#Rewrite').val(data.link.Link1 + ".html");
+                    }
+                    if (data.code == 3) {
+                        var a = $('#Name').val().trim();
+                        $('#Rewrite').val(data.link.Link1 + loc_xoa_dau(a) + ".html");
+                    }
+                    if (data == 0) {
+                        var a = $('#Name').val().trim();
+                        $('#Rewrite').val(loc_xoa_dau(a) + ".html");
+                    }
+                    js_Loading(false, 1);
+                },
+                error: function () {
+                    js_Loading(false, 1);
+                }
+
+            });
+
+        }
+        function fomart_split(input, number) {
+            try {
+                var value = input;
+                if (value != null && !value.length < 1) {
+                    return value.split(" - ")[number];
+                } else {
+                    return "";
+                }
+            } catch (e) {
+
+            }
+        }
+    </script>
+}

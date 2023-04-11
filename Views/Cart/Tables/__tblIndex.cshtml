@@ -1,0 +1,101 @@
+﻿@using System.Data;
+@using WEB.Models;
+@{
+    ViewBag.Title = "__tblIndex";
+}
+
+<div id="example-table-wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table  table-bordered table-hover dataTable" id="example-table-cart" cellspacing="0" width="100%" role="grid" aria-describedby="example-table_info" style="width: 100%;">
+                <thead>
+                    <tr role="row">
+                        <th class="sorting_asc text-center" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-label="Salary: activate to sort column ascending" style="width: 50.5px;" hidden><input type="checkbox" id="cball" onchange="checkall()" name="checkall[]" /></th>
+                        <th class="sorting text-center" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 200.5px;">ID</th>
+                        <th class="sorting text-center" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 150.5px;">Image</th>
+                        <th class="sorting text-center" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 150.5px;">Product</th>
+                        <th class="sorting text-center" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 150.5px;">Size</th>
+                        <th class="sorting text-center" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 150.5px;">Price</th>
+                        <th class="sorting text-center" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 150.5px;">LastPrice</th>
+                        <th class="sorting text-center" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 150.5px;">Quantity</th>
+                        <th class="sorting text-center" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 150.5px;">Total</th>
+                        <th class="sorting text-center" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 150.5px;">Remove</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @{
+                        if (Model != null)
+                        {
+                            var dt = Model as DataTable;
+                            if (dt.Rows.Count > 0)
+                            {
+                                var i = 0;
+                                foreach (DataRow item in dt.Rows)
+                                {
+                                    <tr id="row_@i">
+                                        <td class="text-center align-middle" style=" overflow: hidden;white-space: nowrap;" hidden>
+                                            <input type="checkbox" id="_@i" name="check[]" value="@item["ID"]" />
+                                        </td>
+                                        <td class="text-center align-middle" style=" overflow: hidden;white-space: nowrap">
+                                            @item["ID"]
+                                        </td>
+                                        <td class="text-center align-middle" style="  overflow: hidden;white-space: nowrap">
+                                            <img alt="" src="@Url.Content("/images/"+@item["Url"])" class="content" style="width:80%; height:auto; padding:0px;" />
+                                        </td>
+                                        <td class="text-center align-middle" style="  overflow: hidden;white-space: nowrap">
+                                            @item["Name"]
+                                        </td>
+                                        <td class="text-center align-middle" style="  overflow: hidden;white-space: nowrap">
+                                            @item["SizeName"]
+                                        </td>
+                                        <td class="text-center align-middle" style="  overflow: hidden;white-space: nowrap">
+                                            @item["Price"]
+                                        </td>
+                                        <td class="text-center align-middle" style="  overflow: hidden;white-space: nowrap">
+                                            @item["LastPrice"]
+                                        </td>
+                                        <td class="text-center align-middle" style="  overflow: hidden;white-space: nowrap">
+                                            <div class="input-step">
+                                                <button type="button" class="minus">–</button>
+                                                <input type="number" class="product-quantity" id="quantityrow_@i" value="@item["Quantity"]" min="0" max="100">
+                                                <button type="button" class="plus">+</button>
+                                                <input type="hidden" class="product-quantity" id="sttrow_@i" value="@item["ID"]">
+
+                                            </div>
+                                            @*<input type="number" id="quantity" value="@item["Quantity"]" class="form-control"/>*@
+                                        </td>
+                                        <td class="text-center align-middle" style="  overflow: hidden;white-space: nowrap">
+                                            <span id="total">@item["ToTal"]</span>
+                                            @*<input type="hidden" class="product-quantity" id="totalrow_@i" value="@item["ToTal"]">*@
+                                        </td>
+                                        <td class="text-center align-middle" style="  overflow: hidden;white-space: nowrap">
+                                            <button class="btn btn-outline-danger border border-danger" id="deleteCartItem" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="getID('@item["ID"]')"><i class="ri-delete-bin-fill" style="font-size:20px"></i></button>
+
+                                        </td>
+                                    </tr>
+                                    i++;
+                                }
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script src="~/Content/assets/js/pages/form-input-spin.init.js"></script>
+<!-- Modal -->
+<script>
+    function check(r) {
+        $('#_' + r).filter(':checkbox').prop('checked', true);
+    }
+    function checkall() {
+        var cboxes = document.getElementsByName('check[]');
+        for (var i = 0; i < cboxes.length; i++) {
+            if ($('#cball').is(":checked")) {
+                cboxes[i].checked = true;
+            } else { cboxes[i].checked = false; }
+        }
+    }
+</script>

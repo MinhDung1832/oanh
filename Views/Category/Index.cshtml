@@ -1,0 +1,298 @@
+﻿@using WEB.Models;
+@{
+    ViewBag.Title = "Index";
+}
+@*<a href="/Menu/Language?lang=VIE">Việt Nam</a>
+    <a href="/Menu/Language?lang=ENG">English</a>*@
+@*@Session["lang"]*@
+
+<div class="page-content fade-in-up">
+    <div class="ibox mt-3">
+        <div class="ibox-head">
+            <div class="ibox-title col-md-3">Category Management</div>
+            <div class="btn-group btn-rounded">
+                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#CreateCate">Create</button>
+                <button class="btn btn-danger" onclick="js_acceptUpdate();">Update</button>
+                <button class="btn btn-default" data-toggle="modal" data-target="#myModal1">Delete</button>
+            </div>
+        </div>
+        <div class="ibox-body" id="div-content-cate">
+            @Html.Partial("~/Views/Category/Tables/__tblIndex.cshtml")
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Bạn muốn xóa những bản ghi này không?</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="js_acceptDelete();">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create cate -->
+<div class="modal fade" id="CreateCate" tabindex="-1" aria-labelledby="exampleModalgridLabel" aria-modal="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalgridLabel">Create Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="javascript:void(0);">
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <div>
+                                <label for="CategoryName" class="form-label">Category Name</label>
+                                <input type="text" class="form-control" id="CategoryName" placeholder="Enter category name">
+                            </div>
+                        </div><!--end col-->
+                        <div class="col-lg-12">
+                            <div class="hstack gap-2 justify-content-end">
+                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary" onclick="Save()">Submit</button>
+                            </div>
+                        </div><!--end col-->
+                    </div><!--end row-->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*update cate*@
+<div class="modal fade" id="UpdateCate" tabindex="-1" aria-labelledby="exampleModalgridLabel" aria-modal="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalgridLabel">Create Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="javascript:void(0);">
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <div>
+                                <label for="CategoryName" class="form-label">Category ID</label>
+                                <input type="text" class="form-control" id="CategoryIDDT" disabled>
+                            </div>
+                        </div><!--end col-->
+                        <div class="col-md-12">
+                            <div>
+                                <label for="CategoryName" class="form-label">Category Name</label>
+                                <input type="text" class="form-control" id="CategoryNameDT" placeholder="Enter category name">
+                            </div>
+                        </div><!--end col-->
+                        <div class="col-lg-12">
+                            <div class="hstack gap-2 justify-content-end">
+                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary" onclick="Update()">Update</button>
+                            </div>
+                        </div><!--end col-->
+                    </div><!--end row-->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body text-center p-5">
+                <script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
+                <lord-icon src="https://cdn.lordicon.com/qjwkduhc.json"
+                           trigger="hover"
+                           style="width:150px;height:150px">
+                </lord-icon>
+
+                <div class="mt-4">
+                    <h4 class="mb-3">Thông báo!</h4>
+                    <p class="text-muted mb-4"> Bạn có muốn xóa bản ghi này không.</p>
+                    <div class="hstack gap-2 justify-content-center">
+                        <a href="javascript:void(0);" class="btn btn-link link-success fw-medium" data-bs-dismiss="modal"><i class="ri-close-line me-1 align-middle"></i> Đóng</a>
+                        <a href="javascript:void(0);" class="btn btn-success" onclick="js_acceptDeleteRow();">Xóa</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Content/assets/js/jquery-3.3.1.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(function () {
+        js_GetList();
+    });
+    function js_ReloadTable() {
+        $('#example-table-cate')
+            .DataTable({
+                lengthMenu: [[10, 20, 50, 70, 100, -1], [10, 20, 50, 70, 100, 'All']],
+                "pageLength": 10,
+                columnDefs: [],
+                "orderClasses": false,
+                "deferRender": true,
+                autoWidth: false,
+                bAutoWidth: false,
+                "searching": false,
+                order: [],
+                "language": {
+                    "emptyTable": "Không có dữ liệu !"
+                }
+            });
+    }
+    function js_GetList() {
+        window.scrollTo(0, 0);
+        $.ajax({
+            url: '/Category/getList',
+            type: 'POST',
+            data: JSON.stringify({}),
+            contentType: 'application/json, charset=utf-8',
+            beforeSend: function () {
+                //js_Loading(true, 1);
+            },
+            success: function (data) {
+                $('#div-content-cate').html(data);
+                js_ReloadTable();
+                //js_Loading(false, 1);
+            },
+            error: function () {
+                //js_Loading(false, 1);
+            }
+        });
+    }
+    function js_acceptDeleteRow() {
+        var cboxes = document.getElementsByName('check[]');
+        var arrCheckbox4 = [];
+
+        var i = 0;
+        for (var i = 0; i < cboxes.length; i++) {
+            if (cboxes[i].checked) {
+                var po = {};
+                po.CategoryId = cboxes[i].value;
+
+                console.log(po);
+                arrCheckbox4.push(po);
+            }
+        }
+        $.ajax({
+            url: '/Category/DeleteCategory',
+            type: 'POST',
+            data: JSON.stringify({ lst: arrCheckbox4 }),
+            contentType: 'application/json, charset=utf-8',
+            beforeSend: function () {
+                //js_Loading(true, 1);
+            },
+            success: function (data) {
+
+                if (data == 1) {
+                    Swal.fire(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success'
+                    )
+                    js_GetList();
+                    //js_Loading(false, 1);
+                    window.location = '/Category/Index'
+                }
+
+            },
+            error: function () {
+                //js_Loading(false, 1);
+            }
+
+        });
+    }
+    function fomart_split(input, number) {
+        try {
+            var value = input;
+            if (value != null && !value.length < 1) {
+                return value.split(" - ")[number];
+            } else {
+                return "";
+            }
+        } catch (e) {
+
+        }
+    }
+    function Save() {
+        debugger;
+        window.scrollTo(0, 0);
+        var lst = {};
+        lst.CategoryId = null;
+        lst.Name = $('#CategoryName').val().trim();
+        console.log(lst);
+
+        $.ajax({
+            url: '/Category/CreateCategory',
+            type: 'POST',
+            data: JSON.stringify({ lst: lst }),
+            contentType: 'application/json, charset=utf-8',
+            beforeSend: function () {
+                //js_Loading(true, 1);
+            },
+            success: function (data) {
+
+                if (data == 1) {
+                    Swal.fire(
+                        'Good job!',
+                        'You clicked the button!',
+                        'success'
+                    )
+                    //js_Loading(false, 1);
+                    window.location = '/Category/Index'
+                }
+            },
+            error: function () {
+                //js_Loading(false, 1);
+            }
+
+        });
+
+    }
+    function show(Code, Name) {
+        $('#CategoryIDDT').val(Code);
+        $('#CategoryNameDT').val(Name);
+    }
+    function Update() {
+        window.scrollTo(0, 0);
+        var lst = {};
+        lst.CategoryId = $('#CategoryIDDT').val().trim();
+        lst.Name = $('#CategoryNameDT').val().trim();
+        console.log(lst);
+        $.ajax({
+            url: '/Category/UpdateCategory',
+            type: 'POST',
+            data: JSON.stringify({ lst: lst }),
+            contentType: 'application/json, charset=utf-8',
+            //beforeSend: function () {
+            //    js_Loading(true, 1);
+            //},
+            success: function (data) {
+
+                if (data == 1) {
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Your work has been saved',
+                        showConfirmButton: false,
+                        timer: 1500,
+
+                    })
+                    //js_Loading(false, 1);
+                    window.location = '/Category/Index'
+                }
+
+            },
+            //error: function () {
+            //    js_Loading(false, 1);
+            //}
+
+        });
+    }
+</script>

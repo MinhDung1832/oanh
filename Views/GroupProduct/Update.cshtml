@@ -1,0 +1,244 @@
+﻿@{
+    ViewBag.Title = "Update";
+}
+@*@using WEB
+    @model List<WEB.Models.MenuModel>
+
+    @Model.Name*@
+<input type="text" name="name" id="ID" value="@ViewBag.list_detail.ID" hidden />
+<div class="page-content fade-in-up">
+    <div class="ibox mt-3">
+        <div class="ibox-head">
+            <div class="ibox-title col-md-3">Update</div>
+            @*<div class="btn-group btn-rounded">
+                    <button class="btn btn-success"> Thêm mới</button>
+                    <button class="btn btn-danger"> Cập nhật</button>
+                    <button class="btn btn-default"> Xóa</button>
+                </div>*@
+        </div>
+        <div class="ibox-body" id="div-content">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row mt-2">
+                        <label class="col-md-3">Name</label>
+                        <div class="col-md-5" style=" padding-left: 15px">
+                            <input type="text" name="name" id="Name" value="@ViewBag.list_detail.Name" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Thứ tự</label>
+                        <div class="col-md-5" style=" padding-left: 15px">
+                            <input type="number" name="Order" id="Order" value="@ViewBag.list_detail.Orders" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Rewrite Url</label>
+                        <div class="col-md-5" style=" padding-left: 15px">
+                            <input type="text" name="SoLuong" id="Rewrite" value="@ViewBag.list_detail.Link" class="form-control" />
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-outline-primary btn-border ms-2 " onclick="getName();">Kiểm tra</button>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Ảnh đại diện</label>
+                        <div class="col-md-5">
+                            @Html.TextBox("AnhDaiDien", (string)ViewBag.list_detail.Images, new { @class = "form-control required" })
+                            <input class="sr-only" type="file" id="gallery3" onclick="BrowseServer('AnhDaiDien', 'News')">
+                        </div>
+                        <label class="btn btn-outline-primary btn-border ms-3" for="gallery3">
+                            Chọn ảnh
+                        </label>
+                    </div>
+                    <div class="row mt-2" hidden>
+                        <label class="col-md-3">Đăng nhiều ảnh</label>
+                        <div class="form-group col-md-5">
+                            <span>@Html.TextBox("txtMImage", "", new { placeholder = "", @class = "form-control form-control-lg" })</span>
+                            <input class="sr-only" type="file" name="images[]" id="gallery" onclick="BrowseServerNew('txtMImage','News')" multiple="">
+                        </div>
+                        <p class="text-center col-md-2" style=" float:left;">
+                            <label class="btn btn-secondary mb-0" for="gallery">
+                                <span>Chọn nhiều ảnh...</span>
+                            </label>
+                        </p>
+                    </div>
+                    <div class="row " style="clear: both">
+                        <div class="col-md-3"></div>
+                        <ul id="container-img" style="padding:0px"></ul>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Nội dung</label>
+                        <div class="col-md-9">
+                            @Html.TextArea("MoTa", (string)ViewBag.list_detail.Content, new { @class = "ckeditor" })
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Tiêu đề từ khóa(Title)</label>
+                        <div class="col-md-5" style=" padding-left: 15px">
+                            <textarea name="Name" id="Title" value="" class="form-control">@ViewBag.list_detail.Titleseo</textarea>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Nội dung hiển thị trong(Description)</label>
+                        <div class="col-md-5" style=" padding-left: 15px">
+                            <textarea name="Name" id="Des" value="" class="form-control">@ViewBag.list_detail.Description</textarea>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Nội dung hiển thị trong(Keyword)</label>
+                        <div class="col-md-5" style=" padding-left: 15px">
+                            <textarea name="Name" id="Keyword" value="" class="form-control">@ViewBag.list_detail.Keyword</textarea>
+                        </div>
+                    </div>
+                    <div class="row mt-2" hidden>
+                        <label class="col-md-3">Tùy chọn</label>
+                        <label class="ui-checkbox ui-checkbox-primary">
+                            <input type="checkbox" id="check1">
+                            <span class="input-span"></span>Trang chủ
+                        </label>
+                    </div>
+                    <input type="text" name="name" id="status" value="@ViewBag.list_detail.Status" hidden />
+                    <input type="text" name="name" id="page_Home" value="@ViewBag.list_detail.page_Home" hidden />
+                    <input type="text" name="name" id="capp" value="@ViewBag.list_detail.capp" hidden />
+                    <div class="row mt-2" hidden>
+                        <label class="col-md-3">Thứ tự</label>
+                        <div class="col-md-3" style="width:30%;padding:0px">
+                            <input type="number" name="name" value="" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row mt-2" hidden>
+                        <label class="col-md-3">Hiển thị</label>
+                        <label class="ui-checkbox ui-checkbox-primary">
+                            <input type="checkbox">
+                            <span class="input-span"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="" style="margin-left:10px;"></div>
+                <div class="">
+                    <button class="btn btn-outline-success btn-border" onclick="Update();">Update</button>
+                    <button class="btn btn-outline-primary btn-border" onclick="js_clear();">Clear</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="~/Scripts/ckfinder/ckfinder.js" type="text/javascript"></script>
+<script src="~/Scripts/ckeditor/ckeditor.js" type="text/javascript"></script>
+<script type="text/javascript">
+    CKEDITOR.replace('txttomtat', {
+        toolbar: [
+            { name: 'document', items: ['Source', '-', 'NewPage', 'Preview', '-', 'Templates'] },	// Defines toolbar group with name (used to create voice label) and items in 3 subgroups.
+            ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo'],			// Defines toolbar group without name.
+            '/',																					// Line break - next group will be placed in new line.
+            { name: 'basicstyles', items: ['Bold', 'Italic'] }
+        ]
+    });
+</script>
+<script>
+    function Update() {
+        var lst = {};
+        lst.capp = $('#capp').val();
+        lst.Name = $('#Name').val();
+        lst.Orders = $('#Order').val();
+        var b = loc_xoa_dau($('#Name').val().trim());
+        lst.Url_Name = b;
+        lst.Link = $('#Rewrite').val().replace('.html', '');
+        lst.Images = $('#AnhDaiDien').val();
+        lst.Content = CKEDITOR.instances.MoTa.getData();
+        lst.Titleseo = $('#Title').val();
+        lst.Description = $('#Des').val();
+        lst.Keyword = $('#Keyword').val();
+        lst.Status = $('#status').val();
+        lst.page_Home = $('#page_Home').val();
+        lst.ID = $('#ID').val().trim();
+        console.log(lst);
+        $.ajax({
+            url: '/GroupProduct/UpdateMenu',
+            type: 'POST',
+            data: JSON.stringify({ lst: lst }),
+            contentType: 'application/json, charset=utf-8',
+            beforeSend: function () {
+                js_Loading(true, 1);
+            },
+            success: function (data) {
+
+                if (data == 1) {
+                    Swal.fire(
+                        'Update!',
+                        'Update successful!',
+                        'success'
+                    )
+                    js_Loading(false, 1);
+                }
+
+            },
+            error: function () {
+                js_Loading(false, 1);
+            }
+
+        });
+        window.location = '/GroupProduct/Index';
+    }
+    function loc_xoa_dau(str) {
+        str = str.toLowerCase();
+        // Gộp nhiều dấu space thành 1 space
+        str = str.replace(/\s+/g, '-');
+        // loại bỏ toàn bộ dấu space (nếu có) ở 2 đầu của chuỗi
+        str = str.trim();
+        // bắt đầu xóa dấu tiếng việt  trong chuỗi
+        str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
+        str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
+        str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
+        str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
+        str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
+        str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
+        str = str.replace(/đ/g, "d");
+        str = str.replace(/À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ/g, "A");
+        str = str.replace(/È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ/g, "E");
+        str = str.replace(/Ì|Í|Ị|Ỉ|Ĩ/g, "I");
+        str = str.replace(/Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ/g, "O");
+        str = str.replace(/Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ/g, "U");
+        str = str.replace(/Ỳ|Ý|Ỵ|Ỷ|Ỹ/g, "Y");
+        str = str.replace(/Đ/g, "D");
+        return str;
+    }
+    function getName() {
+        debugger;
+        var Name = $('#Name').val().trim();
+        $.ajax({
+            url: '/GroupProduct/getName',
+            type: 'POST',
+            data: JSON.stringify({ Name: Name }),
+            contentType: 'application/json, charset=utf-8',
+            beforeSend: function () {
+                js_Loading(true, 1);
+            },
+            success: function (data) {
+                if (data.code == 1) {
+                    $('#Rewrite').val(data.link.Link + ".html");
+                }
+                if (data.code == 2) {
+                    $('#Rewrite').val(data.link.Link1 + ".html");
+                }
+                if (data.code == 3) {
+                    var a = $('#Name').val().trim();
+                    $('#Rewrite').val(data.link.Link1 + loc_xoa_dau(a) + ".html");
+                }
+                if (data == 0) {
+                    var a = $('#Name').val().trim();
+                    $('#Rewrite').val(loc_xoa_dau(a) + ".html");
+                }
+                js_Loading(false, 1);
+            },
+            error: function () {
+                js_Loading(false, 1);
+            }
+
+        });
+
+    }
+</script>

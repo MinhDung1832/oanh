@@ -1,0 +1,341 @@
+﻿@{
+    ViewBag.Title = "Update";
+    var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+    serializer.MaxJsonLength = Int32.MaxValue;
+    var jsonItems = serializer.Serialize(ViewBag.list_detail_lv);
+}
+@*@using WEB
+    @model List<WEB.Models.MenuModel>
+
+    @Model.Name*@
+<input type="text" name="name" id="ID" value="@ViewBag.list_detail.ID" hidden />
+<input type="text" name="name" id="capp" value="@ViewBag.list_detail.capp" hidden />
+<div class="page-content fade-in-up">
+    <div class="ibox mt-3">
+        <div class="ibox-head">
+            <div class="ibox-title col-md-3">Update</div>
+            @*<div class="btn-group btn-rounded">
+                    <button class="btn btn-success"> Thêm mới</button>
+                    <button class="btn btn-danger"> Cập nhật</button>
+                    <button class="btn btn-default"> Xóa</button>
+                </div>*@
+        </div>
+        <div class="ibox-body" id="div-content">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row mt-2">
+                        <label class="col-md-3">@NgonNgu.label("MenuName")</label>
+                        <div class="col-md-5" style="width: 30%; padding-left: 15px">
+                            <textarea name="Name" id="Name" value="" class="form-control" oninput="getNameUpdate();">@ViewBag.list_detail.Name</textarea>
+                        </div>
+                    </div>
+                    <div class="row mt-2" id="urlname">
+                        <label class="col-md-3">Tên đường dẫn</label>
+                        <div class="col-md-5" style="width: 30%; padding-left: 15px">
+                            <textarea name="Url_Name" id="Url_Name" value="" class="form-control">@ViewBag.list_detail.Url_Name</textarea>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Ảnh đại diện</label>
+                        <div class="col-md-5">
+                            @Html.TextBox("AnhDaiDien", (string)ViewBag.list_detail.Images, new { @class = "form-control required" })
+                            <input class="sr-only" type="file" id="gallery3" onclick="BrowseServer('AnhDaiDien', 'News')">
+                        </div>
+                        <label class="btn btn-outline-primary btn-border ms-2" for="gallery3">
+                            Chọn ảnh
+                        </label>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Kiểu trang</label>
+                        <div class="col-md-5" style="padding-left: 15px">
+                            <select class="form-control " name="Type" id="Type" onchange="show();" disabled>
+                                @if (ViewBag.list_detail.Type == "0")
+                                {
+                                    <option value="0">Trang liên kết</option>
+                                }
+                                else if (ViewBag.list_detail.Type == "1")
+                                {
+                                    <option value="1">Trang nội dung</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mt-2" id="LK">
+                        <label class="col-md-3">Liên kết</label>
+                        <div class="col-md-5" style="width: 30%; padding-left: 15px">
+                            <select class="form-control " name="Link" id="Link">
+                                <option value="0" selected>Nhập liên kết</option>
+                                <option value="1" selected>Liên kết Module sản phẩm hoặc tin tức</option>
+                                <option value="2" selected>Liên kết sản phẩm</option>
+                                <option value="3" selected>Liên kết tin tức</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3" id="LinkRewrite">
+                            <input type="text" name="SoLuong" id="Rewrite" value="@ViewBag.list_detail.Link" class="form-control" />
+                        </div>
+                        <div class="col-md-1">
+                            <button class="btn btn-primary" onclick="getNameUpdate();">Kiểm tra</button>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Kiểu hiển thị</label>
+                        <div class="col-md-5" style="width: 30%; padding-left: 15px">
+                            <select class="form-control " name="Target" id="Target">
+                                @if (@ViewBag.list_detail.Styleshow == "_self")
+                                {
+                                    <option value="0" selected>_self</option>
+                                    <option value="1">_blank</option>
+                                }
+                                else if (@ViewBag.list_detail.Styleshow == "_blank")
+                                {
+                                    <option value="0">_self</option>
+                                    <option value="1" selected>_blank</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Vị trí hiển thị</label>
+                        <div class="col-md-5" style="width: 30%; padding-left: 15px">
+                            <select class="form-control " name="Position" id="Position">
+                                @if (@ViewBag.list_detail.Styleshow == "_self")
+                                {
+                                    <option value="0" selected>Menu chính</option>
+                                    <option value="1">Tin tức hỗ trợ - chân trang</option>
+                                }
+                                else if (@ViewBag.list_detail.Styleshow == "_blank")
+                                {
+                                    <option value="0">Menu chính</option>
+                                    <option value="1" selected>Tin tức hỗ trợ - chân trang</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <label class="col-md-3">Tiêu đề từ khóa(Title)</label>
+                        <div class="col-md-5" style="width: 30%; padding-left: 15px">
+                            <textarea name="Title" id="Title" value="" class="form-control">@ViewBag.list_detail.Titleseo</textarea>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Nội dung hiển thị trong(Description)</label>
+                        <div class="col-md-5" style="width: 30%; padding-left: 15px">
+                            <textarea name="Des" id="Des" value="" class="form-control">@ViewBag.list_detail.Description</textarea>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Nội dung hiển thị trong(Keyword)</label>
+                        <div class="col-md-5" style="width: 30%; padding-left: 15px">
+                            <textarea name="Keyword" id="Keyword" value="" class="form-control">@ViewBag.list_detail.Keyword</textarea>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">@NgonNgu.label("Order")</label>
+                        <div class="col-md-5" style="width: 30%; padding-left: 15px">
+                            <input type="number" name="Order" id="Order" value="@ViewBag.list_detail.Orders" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Trạng thái</label>
+                        <div class="col-md-3">
+                            <label class="ui-checkbox ui-checkbox-primary">
+                                @if (@ViewBag.list_detail.Status == "1")
+                                {
+                                    <input type="checkbox" id="PageHome" name="PageHome" value="PageHome" checked>
+                                    <span class="input-span"></span><span>Trang chủ</span>
+                                }
+                                else if (@ViewBag.list_detail.Status == "0")
+                                {
+                                    <input type="checkbox" id="PageHome" name="PageHome" value="PageHome">
+                                    <span class="input-span"></span><span>Trang chủ</span>
+                                }
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row mt-2" id="MT">
+                        <label class="col-md-3">Mô tả chi tiết</label>
+                        <div class="col-md-9">
+                            @Html.TextArea("Detail", (string)ViewBag.list_detail.Detail, new { @class = "ckeditor" })
+                        </div>
+                    </div>
+                    <div class="row mt-2" id="ND">
+                        <label class="col-md-3">Nội dung chi tiết</label>
+                        <div class="col-md-9">
+                            @Html.TextArea("Content", (string)ViewBag.list_detail.Content, new { @class = "ckeditor" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="" style="margin-left:10px;"></div>
+                <div class="">
+                    <button class="btn btn-outline-success btn-border" onclick="Update();">Update</button>
+                    <button class="btn btn-outline-primary btn-border" onclick="js_clear();">Clear</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="~/Scripts/ckfinder/ckfinder.js" type="text/javascript"></script>
+<script src="~/Scripts/ckeditor/ckeditor.js" type="text/javascript"></script>
+<script type="text/javascript">
+    CKEDITOR.replace('txttomtat', {
+        toolbar: [
+            { name: 'document', items: ['Source', '-', 'NewPage', 'Preview', '-', 'Templates'] },	// Defines toolbar group with name (used to create voice label) and items in 3 subgroups.
+            ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo'],			// Defines toolbar group without name.
+            '/',																					// Line break - next group will be placed in new line.
+            { name: 'basicstyles', items: ['Bold', 'Italic'] }
+        ]
+    });
+</script>
+<script>
+    $(function () {
+        show();
+    });
+    function show() {
+        if ($('#Type option:selected').val() == "1") {
+            $('#LK').hide();
+            $('#urlname').hide();
+            $('#MT').show();
+            $('#ND').show();
+        }
+        if ($('#Type option:selected').val() == "0") {
+            $('#LK').show();
+            $('#urlname').show();
+            $('#MT').hide();
+            $('#ND').hide();
+            if ($('#Link option:selected').val() == "0") {
+                $('#LinkRewrite').show();
+            }
+        }
+    }
+    function Update() {
+        window.scrollTo(0, 0);
+        if ($('#Type option:selected').val() == "0") {
+            var lst = {};
+            lst.Equals = $('#Link option:selected').val();
+            lst.capp = $('#capp').val();
+            lst.Name = $('#Name').val();
+            lst.Images = $('#AnhDaiDien').val();
+            lst.Type = $('#Type option:selected').val();
+            lst.Url_Name = $('#Url_Name').val();
+            lst.Link = $('#Rewrite').val().replace('.html', '');
+            lst.Styleshow = $('#Target option:selected').text();
+            lst.Views = $('#Position option:selected').val();
+            lst.Titleseo = $('#Title').val();
+            lst.Description = $('#Des').val();
+            lst.Keyword = $('#Keyword').val();
+            lst.Orders = $('#Order').val();
+            if ($('input[name="PageHome"]:checked').val() == "PageHome") {
+                lst.Status = '1';
+            } else {
+                lst.Status = '0';
+            }
+            lst.ID = $('#ID').val().trim();
+            console.log(lst);
+        } else if ($('#Type option:selected').val() == "1") {
+            var lst = {};
+            lst.Name = $('#Name').val();
+            lst.Images = $('#AnhDaiDien').val();
+            lst.Type = $('#Type option:selected').val();
+            lst.Url_Name = $('#Url_Name').val();
+            lst.Styleshow = $('#Target option:selected').text();
+            lst.Views = $('#Position option:selected').val();
+            lst.Titleseo = $('#Title').val();
+            lst.Description = $('#Des').val();
+            lst.Keyword = $('#Keyword').val();
+            lst.Orders = $('#Order').val();
+            if ($('input[name="PageHome"]:checked').val() == "PageHome") {
+                lst.Status = '1';
+            } else {
+                lst.Status = '0';
+            }
+            lst.Detail = CKEDITOR.instances.Detail.getData();
+            lst.Content = CKEDITOR.instances.Content.getData();
+            lst.ID = $('#ID').val().trim();
+            console.log(lst);
+        }
+
+        $.ajax({
+            url: '/Menu/UpdateMenu',
+            type: 'POST',
+            data: JSON.stringify({ lst: lst }),
+            contentType: 'application/json, charset=utf-8',
+            //beforeSend: function () {
+            //    js_Loading(true, 1);
+            //},
+            success: function (data) {
+
+                if (data == 1) {
+                    Swal.fire(
+                        'Update!',
+                        'Update successful!',
+                        'success',
+                        '3000'
+                    )
+                    //js_Loading(false, 1);
+                }
+
+            },
+            //error: function () {
+            //    js_Loading(false, 1);
+            //}
+
+        });
+        window.location = '/Menu/Index';
+    }
+    function loc_xoa_dau(str) {
+        str = str.toLowerCase();
+        // Gộp nhiều dấu space thành 1 space
+        str = str.replace(/\s+/g, '-');
+        // loại bỏ toàn bộ dấu space (nếu có) ở 2 đầu của chuỗi
+        str = str.trim();
+        // bắt đầu xóa dấu tiếng việt  trong chuỗi
+        str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
+        str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
+        str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
+        str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
+        str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
+        str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
+        str = str.replace(/đ/g, "d");
+        str = str.replace(/À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ/g, "A");
+        str = str.replace(/È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ/g, "E");
+        str = str.replace(/Ì|Í|Ị|Ỉ|Ĩ/g, "I");
+        str = str.replace(/Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ/g, "O");
+        str = str.replace(/Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ/g, "U");
+        str = str.replace(/Ỳ|Ý|Ỵ|Ỷ|Ỹ/g, "Y");
+        str = str.replace(/Đ/g, "D");
+        return str;
+    }
+    function getNameUpdate() {
+        debugger;
+        var listItems = @Html.Raw(jsonItems);
+        var Name = $('#Name').val().trim();
+        $.ajax({
+            url: '/Menu/getNameUpdate',
+            type: 'POST',
+            data: JSON.stringify({ Name: Name }),
+            contentType: 'application/json, charset=utf-8',
+            beforeSend: function () {
+                js_Loading(true, 1);
+            },
+            success: function (data) {
+                if (data.code == 2) {
+                    $('#Rewrite').val(listItems.Link + "/" + data.link.Name + ".html");
+                }
+                if (data.code == 3) {
+                    var a = $('#Name').val().trim();
+                    $('#Rewrite').val(listItems.Link + "/" + loc_xoa_dau(a) + ".html");
+                }
+                js_Loading(false, 1);
+            },
+            error: function () {
+                js_Loading(false, 1);
+            }
+
+        });
+
+    }
+</script>

@@ -1,0 +1,210 @@
+﻿<link href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" rel="stylesheet" type="text/css" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.css" rel="stylesheet" type="text/css" />
+
+<div class="bg-light py-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 mb-0"><a href="/Home/Index">Home</a> <span class="mx-2 mb-0">/</span> <strong class="text-black">Cart</strong></div>
+        </div>
+    </div>
+</div>
+
+<div class="site-section mt-3">
+    <div class="container">
+        <div class="row mb-5" id="div-content-cart">
+            @Html.Partial("~/Views/Cart/Tables/__tblIndex.cshtml")
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row mb-5">
+                    <div class="col-md-3 mb-3 mb-md-0">
+                        <button class="btn btn-primary  btn-block" onclick="update()">Update Cart</button>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-outline-primary btn-block" onclick="window.location = '/Shop/Index'">Continue Shopping</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label class="text-black h4" for="coupon">Coupon</label>
+                        <p>Enter your coupon code if you have one.</p>
+                    </div>
+                    <div class="col-md-8 mb-3 mb-md-0">
+                        <input type="text" class="form-control " id="coupon" placeholder="Coupon Code">
+                    </div>
+                    <div class="col-md-4">
+                        <button class="btn btn-primary ">Apply Coupon</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 pl-5">
+                <div class="row justify-content-end">
+                    <div class="col-md-7">
+                        <div class="row">
+                            <div class="col-md-12 text-right border-bottom mb-5">
+                                <h3 class="text-black h4 text-uppercase">Cart Totals</h3>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <span class="text-black">Subtotal</span>
+                            </div>
+                            <div class="col-md-6 text-right">
+                                <strong class="text-black" id="Tong"></strong>
+                            </div>
+                        </div>
+                        <div class="row mb-5">
+                            <div class="col-md-6">
+                                <span class="text-black">Total</span>
+                            </div>
+                            <div class="col-md-6 text-right">
+                                <strong class="text-black" id="Tong1"></strong>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button class="btn btn-primary py-3 btn-block" onclick="window.location='checkout.html'">Proceed To Checkout</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body text-center p-5">
+                <script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
+                <lord-icon src="https://cdn.lordicon.com/qjwkduhc.json"
+                           trigger="hover"
+                           style="width:150px;height:150px">
+                </lord-icon>
+
+                <div class="mt-4">
+                    <h4 class="mb-3">Thông báo!</h4>
+                    <p class="text-muted mb-4"> Bạn có muốn xóa bản ghi này không.</p>
+                    <div class="hstack gap-2 justify-content-center">
+                        <a href="javascript:void(0);" class="btn btn-link link-success fw-medium" data-bs-dismiss="modal"><i class="ri-close-line me-1 align-middle"></i> Đóng</a>
+                        <a href="javascript:void(0);" class="btn btn-success" onclick="deleteItem();">Xóa</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script>
+    $(function () {
+        js_GetList();
+
+    });
+    function js_ReloadTable() {
+        $('#example-table-cart')
+            .DataTable({
+                lengthMenu: [[10, 20, 50, 70, 100, -1], [10, 20, 50, 70, 100, 'All']],
+                "pageLength": 10,
+                columnDefs: [],
+                "orderClasses": false,
+                "deferRender": true,
+                autoWidth: false,
+                bAutoWidth: false,
+                "searching": true,
+                order: [],
+                "language": {
+                    "emptyTable": "Không có dữ liệu !"
+                }
+            });
+    }
+    function js_GetList() {
+        window.scrollTo(0, 0);
+        $.ajax({
+            url: '/Cart/getList',
+            type: 'POST',
+            data: JSON.stringify({}),
+            contentType: 'application/json, charset=utf-8',
+            success: function (data) {
+                $('#div-content-cart').html(data);
+                js_ReloadTable();
+                Getjs_total();
+            }
+        });
+    }
+    function Getjs_update() {
+        debugger;
+        Sourceupdate = [];
+        let trs = $("#example-table-cart tbody tr");
+        if (trs.length) {
+            trs.each((index, tr) => {
+                let stt = String($(' #stt' + tr.id).val()).trim();
+                let quantity = String($('#quantity' + tr.id).val()).trim();
+                if (quantity.length > 0) {
+                    Sourceupdate.push({
+                        "ID": stt,
+                        "Quantity": quantity,
+                    });
+                }
+            });
+            console.log(Sourceupdate);
+
+        }
+    }
+    function Getjs_total() {
+        debugger;
+        var total = 0;
+        var cboxes = document.getElementsByName('check[]');
+        for (var i = 0; i < cboxes.length; i++) {
+            var a = $('#row' + cboxes[i].id + ' #total').html().replaceAll(',', '').replaceAll('.', '');
+            total += parseInt(a);
+        }
+        $('#Tong').html(total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '₫');
+        $('#Tong1').html(total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '₫');
+    }
+    function update() {
+        Getjs_update();
+
+        if (Sourceupdate.length > 0) {
+            console.log(Sourceupdate);
+            $.ajax({
+                url: '/Cart/UpdateCartItem',
+                type: 'POST',
+                data: JSON.stringify({ lst: Sourceupdate }),
+                contentType: 'application/json, charset=utf-8',
+                success: function (data) {
+                    alert("Cập nhật thành công");
+                    js_GetList();
+                    window.location = '/Cart/Index';
+                }
+            });
+        }
+        else {
+            alert("Vui lòng điền số lượng combo!");
+        }
+    }
+    function getID(ID) {
+        this.id = ID;
+    }
+    function deleteItem() {
+        debugger;
+        id = new getID();
+        $.ajax({
+            url: '/Cart/DeleteCartItem',
+            type: 'POST',
+            data: JSON.stringify({ ID: id.id }),
+            contentType: 'application/json, charset=utf-8',
+            success: function (data) {
+                if (data == 1) {
+                alert("Xóa thành công!");
+                js_GetList();
+                } else {
+                    alert("Có lỗi xả ra!");
+                    js_GetList();
+                }
+                window.location = '/Cart/Index';
+            },
+        });
+    }
+</script>

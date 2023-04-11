@@ -1,0 +1,185 @@
+﻿@{
+    ViewBag.Title = "Create";
+}
+<input type="text" id="cap" name="name" value="LG" hidden disabled />
+<div class="page-content fade-in-up">
+    <div class="ibox mt-3">
+        <div class="ibox-head">
+            <div class="ibox-title col-md-3">Thêm mới</div>
+        </div>
+        <div class="ibox-body" id="div-content">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row mt-2">
+                        <label class="col-md-3">Tên chuyên mục</label>
+                        <div class="col-md-3" style="width:30%;padding:0px">
+                            <input type="text" name="name" value="" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Rewrite Url</label>
+                        <div class="col-md-5" style="width:30%;padding:0px">
+                            <input type="text" name="SoLuong" id="Rewrite" value="" class="form-control" />
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-outline-primary btn-border ms-2">Kiểm tra</button>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Ảnh đại diện</label>
+                        <div class="col-md-5" style="width:30%;padding:0px">
+                            <input type="text" name="SoLuong" id="Order" value="" class="form-control" />
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-outline-primary btn-border ms-2">Chọn ảnh</button>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Nội dung</label>
+                        <div class="col-md-8 form-control" id="summernote" data-plugin="summernote" data-air-mode="true">
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Tiêu đề từ khóa(Title)</label>
+                        <div class="col-md-3" style="width:30%;padding:0px">
+                            <textarea name="Name" id="Name" value="" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Nội dung hiển thị trong(Description)</label>
+                        <div class="col-md-3" style="width:30%;padding:0px">
+                            <textarea name="Name" id="Name" value="" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Nội dung hiển thị trong(Keyword)</label>
+                        <div class="col-md-3" style="width:30%;padding:0px">
+                            <textarea name="Name" id="Name" value="" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Tùy chọn</label>
+                        <label class="ui-checkbox ui-checkbox-primary">
+                            <input type="checkbox">
+                            <span class="input-span"></span>Trang chủ
+                        </label>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Thứ tự</label>
+                        <div class="col-md-3" style="width:30%;padding:0px">
+                            <input type="number" name="name" value="" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label class="col-md-3">Hiển thị</label>
+                        <label class="ui-checkbox ui-checkbox-primary">
+                            <input type="checkbox">
+                            <span class="input-span"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <form action="/" method="post" class="dropzone" id="myAwesomeDropzone" data-plugin="dropzone" data-previews-container="#file-previews"
+                      data-upload-preview-template="#uploadPreviewTemplate">
+                    <div class="fallback">
+                        <input name="file" type="file" multiple />
+                    </div>
+
+                    <div class="dz-message needsclick">
+                        <i class="h1 text-muted ri-upload-cloud-2-line"></i>
+                        <h3>Drop files here or click to upload.</h3>
+                        <span class="text-muted font-13">
+                            (This is just a demo dropzone. Selected files are
+                            <strong>not</strong> actually uploaded.)
+                        </span>
+                    </div>
+                </form>
+
+                <!-- Preview -->
+                <div class="dropzone-previews mt-3" id="file-previews"></div>
+
+                <!-- file preview template -->
+                <div class="d-none" id="uploadPreviewTemplate">
+                    <div class="card mt-1 mb-0 shadow-none border">
+                        <div class="p-2">
+                            <div class="row align-items-center">
+                                <div class="col-auto">
+                                    <img data-dz-thumbnail src="#" class="avatar-sm rounded bg-light" alt="">
+                                </div>
+                                <div class="col ps-0">
+                                    <a href="javascript:void(0);" class="text-muted fw-bold" data-dz-name></a>
+                                    <p class="mb-0" data-dz-size></p>
+                                </div>
+                                <div class="col-auto">
+                                    <!-- Button -->
+                                    <a href="" class="btn btn-link btn-lg text-muted" data-dz-remove>
+                                        <i class="ri-close-line"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="" style="margin-left:10px;"></div>
+                <div class="">
+                    <button class="btn btn-outline-success btn-border" onclick="Save();">Save</button>
+                    <button class="btn btn-outline-primary btn-border" onclick="js_clear();">Clear</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(function () {
+        $('#summernote').summernote();
+    });
+    function Save() {
+        window.scrollTo(0, 0);
+        var lst = {};
+
+        lst.Name = $('#Name').val().trim();
+        lst.capp = $('#cap').val().trim();
+        lst.Styleshow = $('#Target').val().trim();
+        lst.Orders = $('#Order').val().trim();
+        lst.Check1 = '1';
+        lst.Check2 = '1';
+        lst.Check3 = '1';
+        lst.Check4 = '1';
+        lst.Check5 = '1';
+        lst.Type = '1';
+        console.log(lst);
+        var arr = [];
+        arr.push(lst);
+        if (arr.length > 0) {
+            $.ajax({
+                url: '/Menu/createMenu',
+                type: 'POST',
+                data: JSON.stringify({ lst: lst }),
+                contentType: 'application/json, charset=utf-8',
+                beforeSend: function () {
+                    js_Loading(true, 1);
+                },
+                success: function (data) {
+
+                    if (data == 1) {
+                        Swal.fire(
+                            'Good job!',
+                            'You clicked the button!',
+                            'success'
+                        )
+                        js_Loading(false, 1);
+                        window.location = '/Menu/Index'
+                    }
+                },
+                error: function () {
+                    js_Loading(false, 1);
+                }
+
+            });
+        }
+    }
+</script>
